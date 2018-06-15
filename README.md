@@ -4,6 +4,6 @@
 
 # Example CorDapp
 
-Test para ver si esta way...
+
 
 Welcome to the example CorDapp. This CorDapp is documented [here](http://docs.corda.net/tutorial-cordapp.html).
