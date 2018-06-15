@@ -1,0 +1,187 @@
+<!--
+--------
+WARNING:
+--------
+
+THIS CODE IS ONLY MADE AVAILABLE FOR DEMONSTRATION PURPOSES AND IS NOT SECURE! DO NOT USE IN PRODUCTION!
+
+FOR SECURITY REASONS, USING A JAVASCRIPT WEB APP HOSTED VIA THE CORDA NODE IS NOT THE RECOMMENDED WAY TO INTERFACE
+WITH CORDA NODES! HOWEVER, FOR THIS PRE-ALPHA RELEASE IT'S A USEFUL WAY TO EXPERIMENT WITH THE PLATFORM AS IT ALLOWS
+YOU TO QUICKLY BUILD A UI FOR DEMONSTRATION PURPOSES.
+
+GOING FORWARD WE RECOMMEND IMPLEMENTING A STANDALONE WEB SERVER THAT AUTHORISES VIA THE NODE'S RPC INTERFACE. IN THE
+COMING WEEKS WE'LL WRITE A TUTORIAL ON HOW BEST TO DO THIS.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example CorDapp</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.1/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js"></script>
+    <script src="js/angular-module.js"></script>
+</head>
+<body ng-app="demoAppModule" ng-controller="DemoAppController as demoApp">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">{{demoApp.thisNode}}</a>
+        </div>
+        <button ng-click="demoApp.openModal()" type="button" class="btn btn-primary navbar-btn">Add Result</button>
+
+    </div>
+</nav>
+<script type="text/ng-template" id="demoAppModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Add Result</h4>
+    </div>
+    <form>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="counterparty" class="control-label">Counter-party:</label>
+                <select ng-model="modalInstance.form.counterparty" class="form-control" id="counterparty"
+                        ng-options="peer as peer for peer in modalInstance.peers">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="challengeName" class="control-label">Challenge Name:</label>
+                <select ng-model="modalInstance.form.challengeName" class="form-control" id="challengeName"
+                        ng-options="challenges as challenges for challenges in modalInstance.challenges">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="challengeYear" class="control-label">Year:</label>
+                <select ng-model="modalInstance.form.challengeYear" class="form-control" id="challengeYear"
+                        ng-options="years as years for years in modalInstance.years">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="control-label">Name:</label>
+                <input type="text" ng-model="modalInstance.form.name" class="form-control" id="name">
+            </div>
+
+
+
+            <table width="100%" style="border-spacing: 10px;">
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label for="plc" class="control-label">PLC:</label>
+                            <input type="text" ng-model="modalInstance.form.plc" class="form-control" id="plc">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <label for="gpic" class="control-label">GPIc:</label>
+                            <input type="text" ng-model="modalInstance.form.gpic" class="form-control" id="gpic">
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label for="bib" class="control-label">Bib:</label>
+                            <input type="text" ng-model="modalInstance.form.bib" class="form-control" id="bib">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <label for="time" class="control-label">Time:</label>
+                            <input type="text" ng-model="modalInstance.form.time" class="form-control" id="time">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+
+
+            <div class="form-group" valign="center">
+                <label for="gender" class="control-label">Gender:</label>
+                <div class="radio">
+                    <label><input type="radio" ng-model="modalInstance.form.gender" value="M" id="gender">Male</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" ng-model="modalInstance.form.gender" value="F" >Famale</label>
+                </div>
+            </div>
+
+            <div ng-show="modalInstance.formError" class="form-group">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Enter valid User parameters
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="modalInstance.cancel()" type="button" class="btn btn-default">Close</button>
+            <button ng-click="modalInstance.create()" type="button" class="btn btn-primary">Add Result</button>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="messageContent.html">
+    <div class="modal-body" id="modal-body">
+        {{ modalInstanceTwo.message }}
+    </div>
+</script>
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div ng-show="!demoApp.results.length" class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">There are no recorded User Results</h3>
+            </div>
+            <div class="panel-body">Use the "Add Result" button to send an User Result to a peer.</div>
+        </div>
+        <div ng-show="demoApp.results.length" class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Recorded User Results:</h3>
+            </div>
+            <div class="panel-body">
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>PLC</th>
+                        <th>GPIc</th>
+                        <th>Bib</th>
+                        <th>Name</th>
+                        <th>Time</th>
+                        <th>Gender</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="results in demoApp.results">
+                        <td class="vert-align">{{results.challengeYear}}</td>
+                        <td class="vert-align">{{results.plc}}</td>
+                        <td class="vert-align">{{results.gpic}}</td>
+                        <td class="vert-align">{{results.bib}}</td>
+                        <td class="vert-align">{{results.name}}</td>
+                        <td class="vert-align">{{results.time}}</td>
+                        <td class="vert-align">{{results.gender}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+</body>
+</html>
